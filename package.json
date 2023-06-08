@@ -1,0 +1,7 @@
+{
+  "author": "rxn",
+  "scripts": {
+    "watch": "tsc --watch --project .",
+    "start": "live-server static"
+  }
+}
