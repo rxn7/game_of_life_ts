@@ -1,25 +1,19 @@
 import { Graphics } from './graphics.js'
 import { Grid } from './grid.js';
 
-let oldTimeStamp: DOMHighResTimeStamp = 0
 let grid: Grid = new Grid(100, 50);
 
 function init(): void {
+	grid.randomize()
 	updateSize()
 	requestAnimationFrame(animationFrame)
 }
 
-function animationFrame(timeStamp: DOMHighResTimeStamp): void {
+function animationFrame(_timeStamp: DOMHighResTimeStamp): void {
 	requestAnimationFrame(animationFrame)
-	update(timeStamp)
 
 	Graphics.clear()
 	grid.render()
-}
-
-function update(timeStamp: DOMHighResTimeStamp): void {
-	const timeDelta = oldTimeStamp == 0 ? 0 : (timeStamp - oldTimeStamp) / 1000
-	oldTimeStamp = timeStamp
 }
 
 function updateSize(): void {

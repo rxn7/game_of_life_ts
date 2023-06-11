@@ -1,21 +1,27 @@
 import { Graphics } from "./graphics.js"
 
 export class Grid {
-	private cells: Array<boolean> = new Array<boolean>()
-	private readonly spacing: number = 0.1;
+	public cells: Array<boolean> = new Array<boolean>()
 	private cellSize: number = 10.0;
+	private readonly spacing: number = 0.1;
 
 	public constructor(private readonly size: number, stepInterval: number = 1000) {
 		this.cells = new Array<boolean>(this.size * this.size)
 		this.resize()
-		this.randomize()
 
 		const stepThread = async () => {
-			await this.step()
 			setTimeout(stepThread, stepInterval)
+			await this.step()
 		}
 
 		stepThread()
+	}
+
+	public setCells(cells: Array<boolean>): void {
+		if (cells.length != this.cells.length)
+			throw new Error('Cannot set cells array with different length than the grid\'s original cells array')
+
+		this.cells = cells
 	}
 
 	public randomize(): void {
