@@ -2,17 +2,11 @@ import { Graphics } from './graphics.js'
 import { Grid } from './grid.js';
 
 let oldTimeStamp: DOMHighResTimeStamp = 0
-let grid: Grid = new Grid(109);
+let grid: Grid = new Grid(100, 50);
 
 function init(): void {
 	updateSize()
 	requestAnimationFrame(animationFrame)
-
-	const randomize = () => {
-		grid.randomize()
-		setTimeout(randomize, 100);
-	}
-	randomize();
 }
 
 function animationFrame(timeStamp: DOMHighResTimeStamp): void {

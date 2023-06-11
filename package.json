@@ -3,5 +3,8 @@
   "scripts": {
     "watch": "tsc --watch --project .",
     "start": "live-server static"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
   }
 }
