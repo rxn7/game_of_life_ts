@@ -51,11 +51,11 @@ export class Grid {
 	public render(): void {
 		const positionScale: number = this.cellSize + this.cellSize * this.spacing
 		Graphics.ctx.beginPath()
-		Graphics.ctx.fillStyle = '#fff'
+		Graphics.ctx.fillStyle = '#000'
 		for (let i = 0; i < this.cells.length; ++i) {
 			if (this.cells[i]) {
 				const [x, y] = this.cellIdxToPosition(i)
-				Graphics.ctx.rect(x * positionScale, y * positionScale, this.cellSize, this.cellSize)
+				Graphics.ctx.roundRect(x * positionScale, y * positionScale, this.cellSize, this.cellSize, this.cellSize * 0.25)
 			}
 		}
 		Graphics.ctx.fill()
