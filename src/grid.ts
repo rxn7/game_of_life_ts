@@ -4,19 +4,12 @@ import { State } from "./state.js";
 export class Grid {
 	public cells: Array<boolean> = new Array<boolean>()
 	private cellSize: number = 10.0;
+	private stepThreadTimeout?: number
 	private readonly spacing: number = 0.1;
 
 	public constructor(private readonly size: number, public stepInterval: number = 1000) {
 		this.cells = new Array<boolean>(this.size * this.size)
-
-		const stepThread = async () => {
-			setTimeout(stepThread, this.stepInterval)
-
-			if (!State.paused)
-				await this.step()
-		}
-
-		stepThread()
+		this.setStepInterval(stepInterval)
 	}
 
 	public setCells(cells: Array<boolean>): void {
@@ -56,14 +49,16 @@ export class Grid {
 	}
 
 	public render(): void {
-		for (let x = 0; x < this.size; ++x) {
-			for (let y = 0; y < this.size; ++y) {
-				if (this.cells[y * this.size + x]) {
-					Graphics.ctx.fillStyle = '#fff'
-					Graphics.ctx.fillRect(x * (this.cellSize + this.cellSize * this.spacing), y * (this.cellSize + this.cellSize * this.spacing), this.cellSize, this.cellSize)
-				}
+		const positionScale: number = this.cellSize + this.cellSize * this.spacing
+		Graphics.ctx.beginPath()
+		Graphics.ctx.fillStyle = '#fff'
+		for (let i = 0; i < this.cells.length; ++i) {
+			if (this.cells[i]) {
+				const [x, y] = this.cellIdxToPosition(i)
+				Graphics.ctx.rect(x * positionScale, y * positionScale, this.cellSize, this.cellSize)
 			}
 		}
+		Graphics.ctx.fill()
 	}
 
 	private countNeighbours(cellIdx: number): number {
@@ -93,6 +88,19 @@ export class Grid {
 
 	public cellIdxToPosition = (cellIdx: number): [number, number] => [Math.floor(cellIdx % this.size), Math.floor(cellIdx / this.size)]
 	public cellPositionToIdx = (x: number, y: number): number => Math.floor(y * this.size + x)
+
+	public setStepInterval(interval: number): void {
+		const stepThread = async () => {
+			this.stepThreadTimeout = setTimeout(stepThread, this.stepInterval)
+
+			if (!State.paused)
+				await this.step()
+		}
+
+		clearTimeout(this.stepThreadTimeout)
+		this.stepInterval = interval
+		this.stepThreadTimeout = setTimeout(stepThread, this.stepInterval)
+	}
 
 	public updateSize(): void {
 		this.cellSize = Math.min(Graphics.canvas.height, Graphics.canvas.width) / (this.size + this.size * this.spacing);

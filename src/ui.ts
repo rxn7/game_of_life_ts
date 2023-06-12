@@ -5,21 +5,18 @@ export namespace UI {
 	export const containerHeight: number = 100
 	const container: HTMLDivElement = document.getElementById('ui-container') as HTMLDivElement
 	const pauseButton: HTMLButtonElement = document.getElementById('pause-btn') as HTMLButtonElement
-	const stepIntervalInput: HTMLInputElement = document.getElementById('step-interval-input') as HTMLInputElement
+	const stepsPerSecondInput: HTMLInputElement = document.getElementById('steps-per-second-input') as HTMLInputElement
 
 	export function init() {
-		console.log('init')
-
 		container.style.height = `${containerHeight}px`;
 
-		Main.grid.stepInterval = stepIntervalInput.valueAsNumber
+		Main.grid.setStepInterval(1.0 / stepsPerSecondInput.valueAsNumber * 1000)
 
-		stepIntervalInput.addEventListener('change', () => {
-			Main.grid.stepInterval = stepIntervalInput.valueAsNumber
+		stepsPerSecondInput.addEventListener('change', () => {
+			Main.grid.setStepInterval(1.0 / stepsPerSecondInput.valueAsNumber * 1000)
 		})
 
 		pauseButton.addEventListener('click', () => {
-			console.log('test')
 			State.paused = !State.paused
 			pauseButton.textContent = State.paused ? "Unpause" : "Pause"
 		})
