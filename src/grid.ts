@@ -25,12 +25,7 @@ export class Grid {
 	}
 
 	public async step(): Promise<void> {
-		type CellChange = {
-			idx: number,
-			value: boolean
-		}
-
-		let changes: Array<CellChange> = []
+		let newCells: Array<boolean> = this.cells.slice(0)
 
 		for (let i = 0; i < this.cells.length; ++i) {
 			const neighbourCount: number = this.countNeighbours(i)
@@ -38,14 +33,13 @@ export class Grid {
 
 			if (cell) {
 				if (neighbourCount < 2 || neighbourCount > 3)
-					changes.push({ idx: i, value: false })
+					newCells[i] = false
 			} else if (neighbourCount == 3) {
-				changes.push({ idx: i, value: true })
+				newCells[i] = true
 			}
 		}
 
-		for (const change of changes)
-			this.cells[change.idx] = change.value
+		this.cells = newCells
 	}
 
 	public render(): void {
