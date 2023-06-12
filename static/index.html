@@ -9,7 +9,16 @@
 	</head>
 
 	<body>
-		<canvas id="canvas"></canvas>
+		<div id="canvas-container">
+			<canvas id="canvas"></canvas>
+		</div>
+
+		<div id="ui-container">
+			<button id="pause-btn">Pause</button>
+			<br>
+			<label>Step rate(ms)</label>
+			<input id="step-interval-input" type="number" min="1" max="9999" step="1" value="200" autocomplete="off">
+		</div>
 	</body>
 
 	<script src="dist/main.js" type="module"></script>

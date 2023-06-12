@@ -1,17 +1,19 @@
 import { Graphics } from "./graphics.js"
+import { State } from "./state.js";
 
 export class Grid {
 	public cells: Array<boolean> = new Array<boolean>()
 	private cellSize: number = 10.0;
 	private readonly spacing: number = 0.1;
 
-	public constructor(private readonly size: number, stepInterval: number = 1000) {
+	public constructor(private readonly size: number, public stepInterval: number = 1000) {
 		this.cells = new Array<boolean>(this.size * this.size)
-		this.resize()
 
 		const stepThread = async () => {
-			setTimeout(stepThread, stepInterval)
-			await this.step()
+			setTimeout(stepThread, this.stepInterval)
+
+			if (!State.paused)
+				await this.step()
 		}
 
 		stepThread()
@@ -92,7 +94,7 @@ export class Grid {
 	public cellIdxToPosition = (cellIdx: number): [number, number] => [Math.floor(cellIdx % this.size), Math.floor(cellIdx / this.size)]
 	public cellPositionToIdx = (x: number, y: number): number => Math.floor(y * this.size + x)
 
-	public resize(): void {
-		this.cellSize = Math.min(Graphics.canvas.height, Graphics.canvas.width) / this.size;
+	public updateSize(): void {
+		this.cellSize = Math.min(Graphics.canvas.height, Graphics.canvas.width) / (this.size + this.size * this.spacing);
 	}
 }
