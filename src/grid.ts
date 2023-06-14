@@ -90,6 +90,13 @@ export class Grid {
 
 	public render(): void {
 		const positionScale: number = this.cellSize + this.cellSize * this.spacing
+
+		if (this.hoveredCellIdx !== -1) {
+			const [x, y] = this.cellIdxToPosition(this.hoveredCellIdx)
+			Graphics.ctx.fillStyle = '#282828'
+			Graphics.ctx.fillRect(x * positionScale, y * positionScale, this.cellSize, this.cellSize)
+		}
+
 		Graphics.ctx.beginPath()
 		Graphics.ctx.fillStyle = '#000'
 		for (let i = 0; i < this.cells.length; ++i) {
