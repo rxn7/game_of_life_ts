@@ -18,6 +18,7 @@ export class Grid {
 			const rect: Rect = Graphics.getRect()
 			const cellX: number = Math.floor((ev.pageX - rect.left) / rect.width * this.size)
 			const cellY: number = Math.floor((ev.pageY - rect.top) / rect.height * this.size)
+			this.lastHoveredCellIdx = this.hoveredCellIdx
 			this.hoveredCellIdx = this.cellPositionToIdx(cellX, cellY)
 
 			// TODO: Fill cells in line from lastHoveredCellIdx to hoveredCellIdx
