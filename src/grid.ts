@@ -7,6 +7,7 @@ export class Grid {
 	private cellSize: number = 10.0;
 	private stepThreadTimeout?: number
 	private hoveredCellIdx: number = -1
+	private lastHoveredCellIdx: number = -1
 	private readonly spacing: number = 0.1;
 
 	public constructor(private readonly size: number, public stepInterval: number = 1000) {
@@ -18,6 +19,8 @@ export class Grid {
 			const cellX: number = Math.floor((ev.pageX - rect.left) / rect.width * this.size)
 			const cellY: number = Math.floor((ev.pageY - rect.top) / rect.height * this.size)
 			this.hoveredCellIdx = this.cellPositionToIdx(cellX, cellY)
+
+			// TODO: Fill cells in line from lastHoveredCellIdx to hoveredCellIdx
 
 			switch (ev.buttons) {
 				case 1:
