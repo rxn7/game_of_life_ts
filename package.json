@@ -2,9 +2,12 @@
   "author": "rxn",
   "scripts": {
     "watch": "tsc --watch --project .",
-    "start": "live-server static"
+    "start": "live-server static",
+    "build": "tsc --project .",
+    "deploy": "gh-pages --dist static"
   },
   "devDependencies": {
+    "gh-pages": "^5.0.0",
     "live-server": "^1.2.2"
   }
 }
