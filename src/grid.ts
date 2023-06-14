@@ -6,14 +6,31 @@ export class Grid {
 	public cells: Array<boolean> = new Array<boolean>()
 	private cellSize: number = 10.0;
 	private stepThreadTimeout?: number
+	private hoveredCellIdx: number = -1
 	private readonly spacing: number = 0.1;
 
 	public constructor(private readonly size: number, public stepInterval: number = 1000) {
 		this.cells = new Array<boolean>(this.size * this.size)
 		this.setStepInterval(stepInterval)
 
+		Graphics.canvas.addEventListener('mousemove', (ev: MouseEvent) => {
+			const rect: Rect = Graphics.getRect()
+			const cellX: number = Math.floor((ev.pageX - rect.left) / rect.width * this.size)
+			const cellY: number = Math.floor((ev.pageY - rect.top) / rect.height * this.size)
+			this.hoveredCellIdx = this.cellPositionToIdx(cellX, cellY)
+
+			switch (ev.buttons) {
+				case 1:
+					this.updateCellUnderMouse(ev, true)
+					break
+
+				case 2:
+					this.updateCellUnderMouse(ev, false)
+					break
+			}
+		})
+
 		Graphics.canvas.addEventListener('mousedown', (ev: MouseEvent) => {
-			console.log(ev.button)
 			switch (ev.button) {
 				case 0:
 					this.updateCellUnderMouse(ev, true)
@@ -27,11 +44,10 @@ export class Grid {
 	}
 
 	private updateCellUnderMouse(ev: MouseEvent, value: boolean): void {
-		const rect: Rect = Graphics.getRect()
-		const cellX: number = Math.floor((ev.pageX - rect.left) / rect.width * this.size)
-		const cellY: number = Math.floor((ev.pageY - rect.top) / rect.height * this.size)
-		const cellIdx: number = this.cellPositionToIdx(cellX, cellY)
-		this.cells[cellIdx] = value
+		if (this.hoveredCellIdx === -1)
+			return;
+
+		this.cells[this.hoveredCellIdx] = value
 	}
 
 	public setCells(cells: Array<boolean>): void {
