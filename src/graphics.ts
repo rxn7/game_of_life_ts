@@ -1,3 +1,4 @@
+import { Rect } from "./rect.js"
 import { UI } from "./ui.js"
 
 export namespace Graphics {
@@ -14,5 +15,14 @@ export namespace Graphics {
 		const size: number = Math.min(document.body.clientWidth, document.body.clientHeight - UI.containerHeight)
 		canvasContainer.style.width = canvas.style.height = `${size}px`
 		canvas.width = canvas.height = size
+	}
+
+	export function getRect(): Rect {
+		return {
+			left: canvas.offsetLeft + canvas.clientLeft,
+			top: canvas.offsetTop + canvas.clientTop,
+			width: canvas.width,
+			height: canvas.height
+		}
 	}
 }

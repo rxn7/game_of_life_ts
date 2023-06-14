@@ -1,4 +1,5 @@
 import { Graphics } from "./graphics.js"
+import { Rect } from "./rect.js";
 import { State } from "./state.js";
 
 export class Grid {
@@ -10,6 +11,27 @@ export class Grid {
 	public constructor(private readonly size: number, public stepInterval: number = 1000) {
 		this.cells = new Array<boolean>(this.size * this.size)
 		this.setStepInterval(stepInterval)
+
+		Graphics.canvas.addEventListener('mousedown', (ev: MouseEvent) => {
+			console.log(ev.button)
+			switch (ev.button) {
+				case 0:
+					this.updateCellUnderMouse(ev, true)
+					break
+
+				case 2:
+					this.updateCellUnderMouse(ev, false)
+					break
+			}
+		})
+	}
+
+	private updateCellUnderMouse(ev: MouseEvent, value: boolean): void {
+		const rect: Rect = Graphics.getRect()
+		const cellX: number = Math.floor((ev.pageX - rect.left) / rect.width * this.size)
+		const cellY: number = Math.floor((ev.pageY - rect.top) / rect.height * this.size)
+		const cellIdx: number = this.cellPositionToIdx(cellX, cellY)
+		this.cells[cellIdx] = value
 	}
 
 	public setCells(cells: Array<boolean>): void {
@@ -17,6 +39,10 @@ export class Grid {
 			throw new Error('Cannot set cells array with different length than the grid\'s original cells array')
 
 		this.cells = cells
+	}
+
+	public clear(): void {
+		this.cells = []
 	}
 
 	public randomize(): void {
